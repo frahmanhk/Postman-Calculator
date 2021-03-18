@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "88216f65-6264-4e2f-a2ca-9d5e7ef070dd",
+		"name": "Calculator[Advanced]",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "BR1-Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.environment.get(\"intA\");\r",
+							"let b = +pm.environment.get(\"intB\");\r",
+							"let sum = a + b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"\r",
+							"//either of the line below - perform same. For XML it is better to use [' ']\r",
+							"var rAddResult = +jsonObject['soap:Envelope']['soap:Body']['AddResponse']['AddResult'];\r",
+							"/*var rAddResult = +jsonObject['soap:Envelope']['soap:Body'].AddResponse.AddResult;*/\r",
+							"\r",
+							"/* Syntax for the test: tests[\"<Description>\"] = (condition)*/\r",
+							"tests[\"AddResult response of \" + a + \" and \" + b + \" is \" + rAddResult + \" | Expected: \" + sum] = (rAddResult === sum)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//code to generate random number - from & to range\r",
+							"pm.environment.set(\"intA\", _.random(-100, 100));\r",
+							"pm.environment.set(\"intB\", _.random(1, 50));\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "catchme.md123@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Charset",
+						"value": "utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Add>\r\n         <tem:intA>{{intA}}</tem:intA>\r\n         <tem:intB>{{intB}}</tem:intB>\r\n      </tem:Add>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "BR1-Add-Test1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Charset",
+								"value": "utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Add>\r\n         <tem:intA>{{intA}}</tem:intA>\r\n         <tem:intB>{{intB}}</tem:intB>\r\n      </tem:Add>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "xml",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private, max-age=0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/xml; charset=utf-8"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.0"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "2.0.50727"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By-Plesk",
+							"value": "PleskWin"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 14 Feb 2021 03:51:27 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "299"
+						}
+					],
+					"cookie": [],
+					"body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n    <soap:Body>\n        <AddResponse xmlns=\"http://tempuri.org/\">\n            <AddResult>-16</AddResult>\n        </AddResponse>\n    </soap:Body>\n</soap:Envelope>"
+				},
+				{
+					"name": "BR1-Add-Char_Test",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Charset",
+								"value": "utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Add>\r\n         <tem:intA>A</tem:intA>\r\n         <tem:intB>5</tem:intB>\r\n      </tem:Add>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "xml",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/xml; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.0"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "2.0.50727"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By-Plesk",
+							"value": "PleskWin"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 14 Feb 2021 03:52:41 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1747"
+						}
+					],
+					"cookie": [],
+					"body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n    <soap:Body>\n        <soap:Fault>\n            <faultcode>soap:Client</faultcode>\n            <faultstring>System.Web.Services.Protocols.SoapException: Server was unable to read request. ---&gt; System.InvalidOperationException: There is an error in XML document (5, 32). ---&gt; System.FormatException: Input string was not in a correct format.\r\n   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer&amp; number, NumberFormatInfo info, Boolean parseDecimal)\r\n   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)\r\n   at System.Xml.XmlConvert.ToInt32(String s)\r\n   at Microsoft.Xml.Serialization.GeneratedAssembly.XmlSerializationReader1.Read1_Add()\r\n   at Microsoft.Xml.Serialization.GeneratedAssembly.ArrayOfObjectSerializer.Deserialize(XmlSerializationReader reader)\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle, XmlDeserializationEvents events)\r\n   --- End of inner exception stack trace ---\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle, XmlDeserializationEvents events)\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle)\r\n   at System.Web.Services.Protocols.SoapServerProtocol.ReadParameters()\r\n   --- End of inner exception stack trace ---\r\n   at System.Web.Services.Protocols.SoapServerProtocol.ReadParameters()\r\n   at System.Web.Services.Protocols.WebServiceHandler.CoreProcessRequest()</faultstring>\n            <detail />\n        </soap:Fault>\n    </soap:Body>\n</soap:Envelope>"
+				},
+				{
+					"name": "BR1-Add-Negative-Char",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Charset",
+								"value": "utf-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Add>\r\n         <tem:intA>A</tem:intA>\r\n         <tem:intB>5</tem:intB>\r\n      </tem:Add>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "xml",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/xml; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.0"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "2.0.50727"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By-Plesk",
+							"value": "PleskWin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 17 Feb 2021 06:54:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1747"
+						}
+					],
+					"cookie": [],
+					"body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n    <soap:Body>\n        <soap:Fault>\n            <faultcode>soap:Client</faultcode>\n            <faultstring>System.Web.Services.Protocols.SoapException: Server was unable to read request. ---&gt; System.InvalidOperationException: There is an error in XML document (5, 32). ---&gt; System.FormatException: Input string was not in a correct format.\r\n   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer&amp; number, NumberFormatInfo info, Boolean parseDecimal)\r\n   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)\r\n   at System.Xml.XmlConvert.ToInt32(String s)\r\n   at Microsoft.Xml.Serialization.GeneratedAssembly.XmlSerializationReader1.Read1_Add()\r\n   at Microsoft.Xml.Serialization.GeneratedAssembly.ArrayOfObjectSerializer.Deserialize(XmlSerializationReader reader)\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle, XmlDeserializationEvents events)\r\n   --- End of inner exception stack trace ---\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle, XmlDeserializationEvents events)\r\n   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle)\r\n   at System.Web.Services.Protocols.SoapServerProtocol.ReadParameters()\r\n   --- End of inner exception stack trace ---\r\n   at System.Web.Services.Protocols.SoapServerProtocol.ReadParameters()\r\n   at System.Web.Services.Protocols.WebServiceHandler.CoreProcessRequest()</faultstring>\n            <detail />\n        </soap:Fault>\n    </soap:Body>\n</soap:Envelope>"
+				}
+			]
+		},
+		{
+			"name": "BR2-Subtract",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.environment.get(\"intA\");\r",
+							"let b = +pm.environment.get(\"intB\");\r",
+							"let sub = a - b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"let rSubResult = +jsonObject['soap:Envelope']['soap:Body'].SubtractResponse.SubtractResult;\r",
+							"\r",
+							"\r",
+							"tests[\"SubtractResult response of \" + a + \" and \" + b + \" is \" + rSubResult + \" | Expected: \" + sub] = (rSubResult === sub)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Subtract>\r\n         <tem:intA>{{intA}}</tem:intA>\r\n         <tem:intB>{{intB}}</tem:intB>\r\n      </tem:Subtract>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BR3-Divide",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.environment.get(\"intA\");\r",
+							"let b = +pm.environment.get(\"intB\");\r",
+							"let div = Math.round(a/b); //1\r",
+							"\r",
+							"if (b != 0){\r",
+							"    //code to check the response status code\r",
+							"    tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"    //XML Body to JSON Object and then get value from the response \r",
+							"    let jsonObject = xml2Json(responseBody);\r",
+							"    let rDivResult = +jsonObject['soap:Envelope']['soap:Body'].DivideResponse.DivideResult;\r",
+							"    \r",
+							"    tests[\"DivideResult response of \" + a + \" and \" + b + \" is \" + rDivResult + \" | Expected: \" + div] = (rDivResult === div)\r",
+							"\r",
+							"}else{\r",
+							"    tests[\"Status is 500\"] = (responseCode.code === 500)\r",
+							"    tests[\"Value of B is ZERO\"] = true\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Divide>\r\n         <tem:intA>{{intA}}</tem:intA>\r\n         <tem:intB>{{intB}}</tem:intB>\r\n      </tem:Divide>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BR4-Multiply",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.environment.get(\"intA\");\r",
+							"let b = +pm.environment.get(\"intB\");\r",
+							"let mul = a * b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"let rMulResult = +jsonObject['soap:Envelope']['soap:Body'].MultiplyResponse.MultiplyResult;\r",
+							"\r",
+							"tests[\"MultiplyResult response of \" + a + \" and \" + b + \" is \" + rMulResult + \" | Expected: \" + mul] = (rMulResult === mul)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Multiply>\r\n         <tem:intA>{{intA}}</tem:intA>\r\n         <tem:intB>{{intB}}</tem:intB>\r\n      </tem:Multiply>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

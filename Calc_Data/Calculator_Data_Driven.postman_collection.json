@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "0e220e27-ff88-4ae6-a0de-4556b3dca1aa",
+		"name": "Calculator_Data_Driven",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "BR1_Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.iterationData.get(\"numA\");\r",
+							"let b = +pm.iterationData.get(\"numB\");\r",
+							"let sum = a + b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"\r",
+							"//either of the line below - perform same. For XML it is better to use [' ']\r",
+							"var rAddResult = +jsonObject['soap:Envelope']['soap:Body']['AddResponse']['AddResult'];\r",
+							"/*var rAddResult = +jsonObject['soap:Envelope']['soap:Body'].AddResponse.AddResult;*/\r",
+							"\r",
+							"/* Syntax for the test: tests[\"<Description>\"] = (condition)*/\r",
+							"tests[\"AddResult response of \" + a + \" and \" + b + \" is \" + rAddResult + \" | Expected: \" + sum] = (rAddResult === sum)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Charset",
+						"value": "utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Add>\r\n         <tem:intA>{{numA}}</tem:intA>\r\n         <tem:intB>{{numB}}</tem:intB>\r\n      </tem:Add>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BR2_Subtract",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.iterationData.get(\"numA\");\r",
+							"let b = +pm.iterationData.get(\"numB\");\r",
+							"let sub = a - b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"let rSubResult = +jsonObject['soap:Envelope']['soap:Body'].SubtractResponse.SubtractResult;\r",
+							"\r",
+							"\r",
+							"tests[\"SubtractResult response of \" + a + \" and \" + b + \" is \" + rSubResult + \" | Expected: \" + sub] = (rSubResult === sub)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Subtract>\r\n         <tem:intA>{{numA}}</tem:intA>\r\n         <tem:intB>{{numB}}</tem:intB>\r\n      </tem:Subtract>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BR3_Divide",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.iterationData.get(\"numA\");\r",
+							"let b = +pm.iterationData.get(\"numB\");\r",
+							"let div = Math.round(a/b); //1\r",
+							"\r",
+							"if (b != 0){\r",
+							"    //code to check the response status code\r",
+							"    tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"    //XML Body to JSON Object and then get value from the response \r",
+							"    let jsonObject = xml2Json(responseBody);\r",
+							"    let rDivResult = +jsonObject['soap:Envelope']['soap:Body'].DivideResponse.DivideResult;\r",
+							"    \r",
+							"    tests[\"DivideResult response of \" + a + \" and \" + b + \" is \" + rDivResult + \" | Expected: \" + div] = (rDivResult === div)\r",
+							"\r",
+							"}else{\r",
+							"    tests[\"Status is 500\"] = (responseCode.code === 500)\r",
+							"    tests[\"Value of B is ZERO\"] = true\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Divide>\r\n         <tem:intA>{{numA}}</tem:intA>\r\n         <tem:intB>{{numB}}</tem:intB>\r\n      </tem:Divide>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BR4_Multiply",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//code to check the response status code\r",
+							"tests[\"Status is 200\"] = (responseCode.code === 200)\r",
+							"\r",
+							"//to convert string to integer - use '+' sign\r",
+							"let a = +pm.iterationData.get(\"numA\");\r",
+							"let b = +pm.iterationData.get(\"numB\");\r",
+							"let mul = a * b; \r",
+							"\r",
+							"//XML Body to JSON Object and then get value from the response \r",
+							"var jsonObject = xml2Json(responseBody);\r",
+							"let rMulResult = +jsonObject['soap:Envelope']['soap:Body'].MultiplyResponse.MultiplyResult;\r",
+							"\r",
+							"tests[\"MultiplyResult response of \" + a + \" and \" + b + \" is \" + rMulResult + \" | Expected: \" + mul] = (rMulResult === mul)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "text/xml"
+					},
+					{
+						"key": "Accept-Charset",
+						"type": "text",
+						"value": "utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:Multiply>\r\n         <tem:intA>{{numA}}</tem:intA>\r\n         <tem:intB>{{numB}}</tem:intB>\r\n      </tem:Multiply>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
